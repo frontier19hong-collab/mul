@@ -1,286 +1,286 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>구구단 낙하 게임</title>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: linear-gradient(to bottom, #d0f0ff, #ffffff);
-    font-family: "Pretendard", sans-serif;
-    text-align: center;
-  }
-
-  h1 {
-    margin: 10px 0;
-    font-size: 1.6rem;
-  }
-
-  .settings {
-    margin: 10px auto;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 1rem;
-  }
-
-  select, button {
-    padding: 5px 10px;
-    font-size: 1rem;
-  }
-
-  .game-info {
-    font-size: 1rem;
-    margin: 5px;
-    display: none; /* 시작 전엔 숨김 */
-  }
-
-  #gameArea {
-    position: relative;
-    width: 100%;
-    height: 70vh;
-    background: #eef8ff;
-    overflow: hidden;
-  }
-
-  .problem {
-    position: absolute;
-    font-size: 2rem;
-    z-index: 9999; /* 문제를 항상 맨 위에 표시 */
-    color: #222;
-    font-weight: bold;
-    pointer-events: none;
-  }
-
-  #inputArea {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 10px;
-  }
-
-  #answerDisplay {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: #0077cc;
-    margin-bottom: 8px;
-  }
-
-  .keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 70px);
-    grid-gap: 6px;
-    justify-content: center;
-  }
-
-  .keypad button {
-    font-size: 1.3rem;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    background-color: #0077cc;
-    color: #fff;
-  }
-
-  .keypad button:active {
-    background-color: #005fa3;
-  }
-
-  /* ✅ 모바일 반응형 조정 */
-  @media (max-width: 768px) {
-    h1 { font-size: 1.3rem; }
-    .settings, .game-info { font-size: 0.8rem; }
-    .keypad button {
-      font-size: 1rem;
-      padding: 6px;
-      width: 60px;
-      height: 45px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>구구단 낙하 게임</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #a8edea, #fed6e3);
+      font-family: 'Arial', sans-serif;
+      height: 100%;
     }
+
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
     .problem {
-      font-size: 1.5rem;
+      position: absolute;
+      background: white;
+      border-radius: 8px;
+      padding: 8px 12px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      font-size: 1.2rem;
+      text-align: center;
+      user-select: none;
     }
-  }
-</style>
+
+    #ui {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    select, button, input {
+      font-size: 1rem;
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #score, #timer {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    #inputDisplay {
+      position: absolute;
+      bottom: 30vh;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 1.3rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 1000;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    #keypad {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 80%;
+      max-width: 320px;
+      z-index: 999;
+    }
+
+    #keypad button {
+      font-size: 1.1rem;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background-color: #ffb6c1;
+      cursor: pointer;
+      transition: 0.2s;
+      width: 100%;
+    }
+
+    #keypad button:hover {
+      background-color: #ffa1b1;
+    }
+
+    @media (max-width: 600px) {
+      .problem {
+        font-size: 1rem;
+        padding: 6px 10px;
+      }
+
+      #inputDisplay {
+        font-size: 1.1rem;
+        bottom: 35vh;
+      }
+
+      #keypad {
+        width: 90%;
+        max-width: 280px;
+      }
+
+      #keypad button {
+        font-size: 1rem;
+        padding: 10px;
+      }
+
+      #ui {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>구구단 낙하 게임</h1>
-
-  <div class="settings">
-    <label>난이도:
-      <select id="difficulty">
-        <option value="9">구구단 (1~9)</option>
-        <option value="19">십구단 (1~19)</option>
-      </select>
-    </label>
-    <label>속도:
-      <select id="speed">
-        <option value="120">느림</option>
-        <option value="200" selected>보통</option>
-        <option value="280">빠름</option>
-      </select>
-    </label>
-    <label>타이머:
-      <select id="timer">
-        <option value="60">1분</option>
-        <option value="120">2분</option>
-        <option value="180">3분</option>
-        <option value="240">4분</option>
-        <option value="300">5분</option>
-      </select>
-    </label>
-    <button id="startBtn">게임 시작</button>
-  </div>
-
-  <div class="game-info">
-    <div>점수: <span id="score">0</span></div>
-    <div>남은 시간: <span id="timeLeft">0</span>초</div>
-  </div>
-
   <div id="gameArea"></div>
 
-  <div id="inputArea">
-    <div id="answerDisplay"></div>
-    <div class="keypad">
-      <button class="num">1</button>
-      <button class="num">2</button>
-      <button class="num">3</button>
-      <button class="num">4</button>
-      <button class="num">5</button>
-      <button class="num">6</button>
-      <button class="num">7</button>
-      <button class="num">8</button>
-      <button class="num">9</button>
-      <button id="clear">지움</button>
-      <button class="num">0</button>
-      <button id="submit">확인</button>
-    </div>
+  <div id="ui">
+    <label>난이도:</label>
+    <select id="difficulty">
+      <option value="9">구구단 (1~9)</option>
+      <option value="19">십구단 (1~19)</option>
+    </select>
+
+    <label>속도:</label>
+    <select id="speed">
+      <option value="2">느림</option>
+      <option value="4">보통</option>
+      <option value="6">빠름</option>
+    </select>
+
+    <label>타이머:</label>
+    <select id="timerSelect">
+      <option value="60">1분</option>
+      <option value="120">2분</option>
+      <option value="180">3분</option>
+      <option value="240">4분</option>
+      <option value="300">5분</option>
+    </select>
+
+    <button id="startBtn">게임 시작</button>
+    <div id="score">점수: 0</div>
+    <div id="timer">남은시간: 0초</div>
   </div>
 
-<script>
-let problems = [];
-let answerInput = "";
-let score = 0;
-let timerInterval;
-let gameInterval;
-let timeLeft = 60;
-let gameActive = false;
+  <div id="inputDisplay">입력값: </div>
+  <div id="keypad"></div>
 
-const gameArea = document.getElementById("gameArea");
-const scoreDisplay = document.getElementById("score");
-const answerDisplay = document.getElementById("answerDisplay");
-const timeDisplay = document.getElementById("timeLeft");
+  <script>
+    const gameArea = document.getElementById('gameArea');
+    const startBtn = document.getElementById('startBtn');
+    const scoreDisplay = document.getElementById('score');
+    const timerDisplay = document.getElementById('timer');
+    const keypad = document.getElementById('keypad');
+    const inputDisplay = document.getElementById('inputDisplay');
+    const ui = document.getElementById('ui');
 
-document.getElementById("startBtn").addEventListener("click", startGame);
-document.getElementById("submit").addEventListener("click", checkAnswer);
-document.getElementById("clear").addEventListener("click", () => {
-  answerInput = "";
-  updateDisplay();
-});
-document.querySelectorAll(".num").forEach(btn => {
-  btn.addEventListener("click", () => {
-    if (answerInput.length < 3) {
-      answerInput += btn.textContent;
-      updateDisplay();
+    let problems = [];
+    let score = 0;
+    let gameInterval;
+    let fallInterval;
+    let timerInterval;
+    let timeLeft;
+    let currentInput = '';
+
+    const keypadButtons = [1,2,3,4,5,6,7,8,9,0,'지우기','입력'];
+    keypad.innerHTML = '';
+    keypadButtons.forEach(v => {
+      const btn = document.createElement('button');
+      btn.textContent = v;
+      btn.onclick = () => handleKeypad(v);
+      keypad.appendChild(btn);
+    });
+
+    function handleKeypad(v) {
+      if(v === '지우기') {
+        currentInput = '';
+      } else if(v === '입력') {
+        checkAnswer();
+      } else {
+        currentInput += v;
+      }
+      inputDisplay.textContent = `입력값: ${currentInput}`;
     }
-  });
-});
 
-function startGame() {
-  if (gameActive) return;
-  gameActive = true;
-  score = 0;
-  answerInput = "";
-  scoreDisplay.textContent = 0;
-  answerDisplay.textContent = "";
-  gameArea.innerHTML = "";
-  problems = [];
+    function startGame() {
+      ui.style.display = 'none'; // 🎯 설정 UI 숨기기
+      clearInterval(gameInterval);
+      clearInterval(fallInterval);
+      clearInterval(timerInterval);
+      score = 0;
+      scoreDisplay.textContent = '점수: 0';
+      gameArea.innerHTML = '';
+      problems = [];
 
-  document.querySelector(".settings").style.display = "none";
-  document.querySelector(".game-info").style.display = "block";
+      const difficulty = parseInt(document.getElementById('difficulty').value);
+      const speed = parseInt(document.getElementById('speed').value);
+      timeLeft = parseInt(document.getElementById('timerSelect').value);
+      timerDisplay.textContent = `남은시간: ${timeLeft}초`;
 
-  const diff = parseInt(document.getElementById("difficulty").value);
-  const speed = parseInt(document.getElementById("speed").value);
-  timeLeft = parseInt(document.getElementById("timer").value);
-
-  timeDisplay.textContent = timeLeft;
-
-  gameInterval = setInterval(() => spawnProblem(diff, speed), 1200);
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    timeDisplay.textContent = timeLeft;
-    if (timeLeft <= 0) endGame();
-  }, 1000);
-}
-
-function spawnProblem(diff, speed) {
-  const a = Math.floor(Math.random() * diff) + 1;
-  const b = Math.floor(Math.random() * 9) + 1;
-  const result = a * b;
-  const elem = document.createElement("div");
-  elem.className = "problem";
-  elem.textContent = `${a} x ${b} = ?`;
-  elem.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
-  elem.style.top = "-50px";
-  gameArea.appendChild(elem);
-
-  const problem = { elem, result, y: -50 };
-  problems.push(problem);
-
-  const fall = setInterval(() => {
-    if (!gameActive) return clearInterval(fall);
-    problem.y += speed / 30;
-    elem.style.top = problem.y + "px";
-    if (problem.y > gameArea.clientHeight - 30) {
-      // 놓침: 점수 감소
-      score -= 5;
-      updateScore();
-      gameArea.removeChild(elem);
-      problems = problems.filter(p => p !== problem);
-      clearInterval(fall);
+      gameInterval = setInterval(() => spawnProblem(difficulty), 1500);
+      fallInterval = setInterval(() => moveProblems(speed), 50);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = `남은시간: ${timeLeft}초`;
+        if(timeLeft <= 0) endGame();
+      }, 1000);
     }
-  }, 30);
-}
 
-function checkAnswer() {
-  if (!answerInput) return;
-  const num = parseInt(answerInput);
-  const hit = problems.find(p => p.result === num);
-  if (hit) {
-    // 정답
-    score += 10;
-    updateScore();
-    hit.elem.remove();
-    problems = problems.filter(p => p !== hit);
-  } else {
-    // 오답
-    score -= 5;
-    updateScore();
-  }
-  answerInput = "";
-  updateDisplay();
-}
+    function spawnProblem(maxDan) {
+      const x = Math.random() * (window.innerWidth - 80);
+      const y = 0;
+      const dan = Math.floor(Math.random() * maxDan) + 1;
+      const num = Math.floor(Math.random() * 9) + 1;
+      const answer = dan * num;
 
-function updateDisplay() {
-  answerDisplay.textContent = answerInput;
-}
+      const div = document.createElement('div');
+      div.classList.add('problem');
+      div.style.left = `${x}px`;
+      div.style.top = `${y}px`;
+      div.textContent = `${dan} × ${num}`;
+      gameArea.appendChild(div);
 
-function updateScore() {
-  scoreDisplay.textContent = score;
-}
+      problems.push({ element: div, x, y, answer });
+    }
 
-function endGame() {
-  clearInterval(timerInterval);
-  clearInterval(gameInterval);
-  gameActive = false;
-  alert(`게임 종료! 점수: ${score}`);
-  document.querySelector(".settings").style.display = "flex";
-  document.querySelector(".game-info").style.display = "none";
-}
-</script>
+    function moveProblems(speed) {
+      problems.forEach((p, i) => {
+        p.y += speed;
+        p.element.style.top = `${p.y}px`;
+        if (p.y > window.innerHeight - 50) {
+          p.element.remove();
+          problems.splice(i, 1);
+          score = Math.max(0, score - 5);
+          scoreDisplay.textContent = `점수: ${score}`;
+        }
+      });
+    }
+
+    function checkAnswer() {
+      if (!currentInput) return;
+      const val = parseInt(currentInput);
+      const matched = problems.find(p => p.answer === val);
+      if (matched) {
+        matched.element.remove();
+        problems = problems.filter(p => p !== matched);
+        score += 10;
+      } else {
+        score = Math.max(0, score - 5);
+      }
+      scoreDisplay.textContent = `점수: ${score}`;
+      currentInput = '';
+      inputDisplay.textContent = `입력값:`;
+    }
+
+    function endGame() {
+      clearInterval(gameInterval);
+      clearInterval(fallInterval);
+      clearInterval(timerInterval);
+      ui.style.display = 'flex'; // 🎯 게임 종료 시 설정 UI 다시 표시
+      alert(`게임 종료! 당신의 점수는 ${score}점입니다.`);
+    }
+
+    startBtn.addEventListener('click', startGame);
+  </script>
 </body>
 </html>
